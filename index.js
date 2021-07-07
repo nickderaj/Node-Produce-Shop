@@ -2,6 +2,8 @@
 const fs = require("fs");
 const http = require("http");
 const url = require("url");
+// 3rd PARTY MODULES
+const slugify = require("slugify");
 // OUR OWN MODULE
 const replaceTemplate = require("./modules/replaceTemplate.js"); // . now points to this, don't need _dirname
 
@@ -49,14 +51,20 @@ const tempProduct = fs.readFileSync(
   `${__dirname}/templates/template-product.html`,
   "utf-8"
 );
+
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
 const dataObj = JSON.parse(data);
+
+const slugs = dataObj.map((el) => slugify(el.productName, { lower: true }));
+console.log(slugs[0]);
+dataObj.forEach((el, i) => (el["slug"] = slugs[i]));
+console.log(dataObj);
 
 const server = http.createServer((req, res) => {
   const baseUrl = `http://${req.headers.host}/`;
   const requestURL = new URL(req.url, baseUrl);
   const { pathname } = requestURL;
-  const query = requestURL.searchParams.get("id");
+  const query = requestURL.search.slice(1);
 
   // Overview page
   if (pathname === "/" || pathname === "/overview") {
@@ -71,9 +79,11 @@ const server = http.createServer((req, res) => {
     res.end(output);
 
     // Product page
-  } else if (pathname === "/product") {
+  } else if (pathname.includes("/product")) {
     res.writeHead(200, { "Content-type": "text/html" });
-    const product = dataObj[query];
+    const product = dataObj.filter((el) => {
+      return el.slug === query;
+    })[0];
     const output = replaceTemplate(tempProduct, product);
 
     res.end(output);

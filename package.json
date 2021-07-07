@@ -1,0 +1,25 @@
+{
+  "name": "node-produce-shop",
+  "version": "1.0.0",
+  "description": "Modular shop landing site",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickderaj/Node-Produce-Shop.git"
+  },
+  "author": "Nicholas De Raj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nickderaj/Node-Produce-Shop/issues"
+  },
+  "homepage": "https://github.com/nickderaj/Node-Produce-Shop#readme",
+  "dependencies": {
+    "slugify": "^1.5.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.9"
+  }
+}
